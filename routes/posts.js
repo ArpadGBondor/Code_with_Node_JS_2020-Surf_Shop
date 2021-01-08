@@ -12,12 +12,12 @@ const router = express.Router();
 
 // GET    index   /posts
 router.get('/', (req, res, next) => {
-  res.send('/posts');
+  res.send('INDEX /posts');
 });
 
 // GET    new     /posts/new
 router.get('/new', (req, res, next) => {
-  res.send('/posts/new');
+  res.send('NEW /posts/new');
 });
 
 // POST   create  /posts
@@ -27,12 +27,12 @@ router.post('/', (req, res, next) => {
 
 // GET    show    /posts/:id
 router.get('/:id', (req, res, next) => {
-  res.send('/posts/' + req.params.id + ' (not new)');
+  res.send('SHOW /posts/' + req.params.id);
 });
 
 // GET    edit    /posts/:id/edit
 router.get('/:id/edit', (req, res, next) => {
-  res.send('/posts/' + req.params.id + '/edit');
+  res.send('EDIT /posts/' + req.params.id + '/edit');
 });
 
 // PUT    update  /posts/:id

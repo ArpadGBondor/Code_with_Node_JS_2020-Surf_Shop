@@ -1,15 +1,32 @@
+const dotenv = require('dotenv').config();
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const session = require('express-session');
+const passport = require('passport');
+const mongoose = require('mongoose');
+const User = require('./models/user');
+const debug = require('debug')('surf-shop:app');
 
+// Require routes
 const indexRouter = require('./routes/index');
 const postsRouter = require('./routes/posts');
 const reviewsRouter = require('./routes/reviews');
 
-const app = express();
+// MongoDB connection
+mongoose.connect(process.env.DB_CONNECT, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false
+});
+const db = mongoose.connection;
+db.on('error',console.error.bind(console,'connection error:'));
+db.once('open',()=>{debug("Database connected.")})
 
+const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -20,6 +37,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// configure Passport and Sessions
+// !!! session has to be configured before passport
+app.use(session({
+  secret: process.env.APP_SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true
+}))
+
+passport.use(User.createStrategy());
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// Mount routes
 app.use('/', indexRouter);
 app.use('/posts', postsRouter);
 app.use('/posts/:id/reviews', reviewsRouter);

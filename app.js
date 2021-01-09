@@ -44,7 +44,7 @@ app.use(logger('dev'));
 
 // use body-parser
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 // use cookie-parser
 app.use(cookieParser());

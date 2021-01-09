@@ -6,7 +6,8 @@ const {
   postNew,
   postCreate,
   postShow,
-  postEdit
+  postEdit,
+  postUpdate
 } = require('../controllers/posts');
 
 // RESTful routing:
@@ -34,9 +35,7 @@ router.get('/:id', asyncErrorHandler(postShow));
 router.get('/:id/edit', asyncErrorHandler(postEdit));
 
 // PUT    update  /posts/:id
-router.put('/:id', (req, res, next) => {
-  res.send('UPDATE /posts/' + req.params.id);
-});
+router.put('/:id', asyncErrorHandler(postUpdate));
 
 // DELETE destroy /posts/:id
 router.delete('/:id', (req, res, next) => {

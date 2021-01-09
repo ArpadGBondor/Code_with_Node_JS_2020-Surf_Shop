@@ -1,3 +1,4 @@
+const passport = require('passport');
 const User = require('../models/user');
 const debug = require('debug')('surf-shop:controllers/index');
 
@@ -10,17 +11,13 @@ module.exports = {
     });
     await User.register(newUser,req.body.password);
     res.redirect('/');
-
-    // User.register(newUser,req.body.password,(err,user)=>{
-    //   if (err) {
-    //     debug(err);
-    //     return next(err);
-    //   } else {
-    //     debug('User registered: ' + user.username);
-    //     debug(user);
-    //     res.redirect('/');
-    //   }
-    // })
-    // res.send('POST REGISTER');
   },
+
+  postLogin(req,res,next) {
+    passport.authenticate('local',{
+        successRedirect: '/',
+        failureRedirect: '/login'
+      })(req,res,next);
+
+  }
 }

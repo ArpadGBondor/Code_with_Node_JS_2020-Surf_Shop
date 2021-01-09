@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { errorHandler } = require('../middleware/index');
+const { asyncErrorHandler } = require('../middleware/index');
 const {
-  getPosts,
-  getNewPost,
-  postNewPost,
-  showPost,
-  getEditPost
+  postIndex,
+  postNew,
+  postCreate,
+  postShow,
+  postEdit
 } = require('../controllers/posts');
 
 // RESTful routing:
@@ -19,19 +19,19 @@ const {
   // DELETE destroy /posts/:id
 
 // GET    index   /posts
-router.get('/', errorHandler(getPosts));
+router.get('/', asyncErrorHandler(postIndex));
 
 // GET    new     /posts/new
-router.get('/new', getNewPost);
+router.get('/new', postNew);
 
 // POST   create  /posts
-router.post('/', errorHandler(postNewPost));
+router.post('/', asyncErrorHandler(postCreate));
 
 // GET    show    /posts/:id
-router.get('/:id', errorHandler(showPost));
+router.get('/:id', asyncErrorHandler(postShow));
 
 // GET    edit    /posts/:id/edit
-router.get('/:id/edit', errorHandler(getEditPost));
+router.get('/:id/edit', asyncErrorHandler(postEdit));
 
 // PUT    update  /posts/:id
 router.put('/:id', (req, res, next) => {

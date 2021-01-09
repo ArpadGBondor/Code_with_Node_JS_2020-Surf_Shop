@@ -4,7 +4,8 @@ const { errorHandler } = require('../middleware/index');
 const {
   getPosts,
   getNewPost,
-  postNewPost
+  postNewPost,
+  showPost
 } = require('../controllers/posts');
 
 // RESTful routing:
@@ -26,9 +27,7 @@ router.get('/new', getNewPost);
 router.post('/', errorHandler(postNewPost));
 
 // GET    show    /posts/:id
-router.get('/:id', (req, res, next) => {
-  res.send('SHOW /posts/' + req.params.id);
-});
+router.get('/:id', errorHandler(showPost));
 
 // GET    edit    /posts/:id/edit
 router.get('/:id/edit', (req, res, next) => {

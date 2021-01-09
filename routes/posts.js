@@ -5,7 +5,8 @@ const {
   getPosts,
   getNewPost,
   postNewPost,
-  showPost
+  showPost,
+  getEditPost
 } = require('../controllers/posts');
 
 // RESTful routing:
@@ -30,9 +31,7 @@ router.post('/', errorHandler(postNewPost));
 router.get('/:id', errorHandler(showPost));
 
 // GET    edit    /posts/:id/edit
-router.get('/:id/edit', (req, res, next) => {
-  res.send('EDIT /posts/' + req.params.id + '/edit');
-});
+router.get('/:id/edit', errorHandler(getEditPost));
 
 // PUT    update  /posts/:id
 router.put('/:id', (req, res, next) => {

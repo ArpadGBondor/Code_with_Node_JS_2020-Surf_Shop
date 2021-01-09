@@ -22,7 +22,11 @@ module.exports = {
     // req.params.id contains the id
     let post = await Post.findById(req.params.id);
     res.render('posts/show',{post});
+  },
+
+  async getEditPost(req,res,next) {
+    // req.params.id contains the id
+    let post = await Post.findById(req.params.id);
+    res.render('posts/edit',{post});
   }
-
-
 }

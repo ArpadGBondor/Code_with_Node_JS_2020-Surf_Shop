@@ -9,6 +9,7 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const User = require('./models/user');
 const debug = require('debug')('surf-shop:app');
+const methodOverride = require('method-override');
 
 // Require routes
 const indexRouter = require('./routes/index');
@@ -50,6 +51,9 @@ app.use(cookieParser());
 
 // use public library
 app.use(express.static(path.join(__dirname, 'public')));
+
+// use method-override
+app.use(methodOverride('_method'));
 
 // configure Passport and Sessions
 // !!! session has to be configured before passport

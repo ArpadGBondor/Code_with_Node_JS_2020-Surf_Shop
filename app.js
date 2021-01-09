@@ -27,14 +27,28 @@ db.on('error',console.error.bind(console,'connection error:'));
 db.once('open',()=>{debug("Database connected.")})
 
 const app = express();
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+// Morgan logs server requests:
+  // 'dev': output colored by response status for development use
+    // green for success codes
+    // red for server error codes
+    // yellow for client error codes
+    // cyan for redirection codes
+    // uncolored for information codes
 app.use(logger('dev'));
+
+// use body-parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// use cookie-parser
 app.use(cookieParser());
+
+// use public library
 app.use(express.static(path.join(__dirname, 'public')));
 
 // configure Passport and Sessions
@@ -44,9 +58,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }))
-
 passport.use(User.createStrategy());
-
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 

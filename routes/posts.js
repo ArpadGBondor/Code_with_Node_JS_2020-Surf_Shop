@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { errorHandler } = require('../middleware/index');
+const { getPosts } = require('../controllers/posts');
 
 // RESTful routing:
   // GET    index   /posts
@@ -11,9 +13,7 @@ const router = express.Router();
   // DELETE destroy /posts/:id
 
 // GET    index   /posts
-router.get('/', (req, res, next) => {
-  res.send('INDEX /posts');
-});
+router.get('/', errorHandler(getPosts));
 
 // GET    new     /posts/new
 router.get('/new', (req, res, next) => {

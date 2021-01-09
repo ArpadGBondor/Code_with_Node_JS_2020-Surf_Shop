@@ -22,5 +22,5 @@ module.exports = {
     //   }
     // })
     // res.send('POST REGISTER');
-  }
+  },
 }

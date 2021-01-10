@@ -48,6 +48,24 @@ module.exports = {
 
   // PUT    update  /posts/:id
   async postUpdate(req, res, next) {
+    // Handle any deletion of existing images
+
+    // Handle upload any new images
+
+
+
+    // req.body.post.images = [];
+    // for (const file of req.files) {
+    //
+    //   let image = await cloudinary.v2.uploader.upload(file.path);
+    //   req.body.post.images.push({
+    //     url: image.secure_url,
+    //     public_id: image.public_id
+    //   });
+    // }
+
+
+
     let post = await Post.findByIdAndUpdate(req.params.id, req.body.post);
     res.redirect(`/posts/${post.id}`);
   },

@@ -9,13 +9,7 @@ const Schema = mongoose.Schema;
 //  - posts - array of objects ref Post
 const UserSchema = new Schema({
   email: String,
-  image: String,
-  posts: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Post'
-    }
-  ]
+  image: { url: String, public_id: String }
 });
 UserSchema.plugin(passportLocalMongoose);
 module.exports = mongoose.model('User', UserSchema);

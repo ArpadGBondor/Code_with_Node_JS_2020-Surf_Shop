@@ -3,8 +3,13 @@
 <div>Description: <%= post.description %></div>
 <div>Location: <%= post.location %></div>
 <div class="">
+  <% post.images.forEach((image) => { %>
+    <img style="max-width:20%;" src="<%= image.url %>" alt="" >
+  <% }); %>
+</div>
+<div class="">
   <a href="/posts/<%= post.id %>/edit">
-    <button>Edit</button> 
+    <button>Edit</button>
   </a>
 </div>
 <div class="">

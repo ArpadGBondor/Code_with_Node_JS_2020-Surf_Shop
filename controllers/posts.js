@@ -48,30 +48,50 @@ module.exports = {
 
   // PUT    update  /posts/:id
   async postUpdate(req, res, next) {
-    // Handle any deletion of existing images
-
-    // Handle upload any new images
-
-
-
-    // req.body.post.images = [];
-    // for (const file of req.files) {
-    //
-    //   let image = await cloudinary.v2.uploader.upload(file.path);
-    //   req.body.post.images.push({
-    //     url: image.secure_url,
-    //     public_id: image.public_id
-    //   });
-    // }
-
-
-
-    let post = await Post.findByIdAndUpdate(req.params.id, req.body.post);
+    // find the post by idea
+    let post = await Post.findById(req.params.id);
+    // check if there's any images for deletion
+    if (req.body.deleteImages && req.body.deleteImages.length > 0) {
+      // assign deleteImages from req.body to it's own variable
+      let deleteImages = req.body.deleteImages;
+      // loop over deleteImages
+      for (const public_id of deleteImages) {
+        // delete images from cloudinary
+        await cloudinary.v2.uploader.destroy(public_id);
+        // delete image from post.images
+        for (const image of post.images) {
+          if (image.public_id === public_id) {
+            let index = post.images.indexOf(image);
+            post.images.splice(index,1);
+          }
+        }
+      }
+    }
+    // check if there are any new images for upload
+    if (req.files) {
+      for (const file of req.files) {
+        // upload images
+        let image = await cloudinary.v2.uploader.upload(file.path);
+        // add images to post.images array
+        req.body.post.images.push({
+          url: image.secure_url,
+          public_id: image.public_id
+        });
+      }
+    }
+    // update the post with any new properties
+    for (const property in req.body.post) {
+      post[property] = req.body.post[property];
+    }
+    // save the updated post into the db
+    await post.save();
+    // redirect to show page
     res.redirect(`/posts/${post.id}`);
   },
 
   // DELETE destroy /posts/:id
   async postDelete(req, res, next) {
+    // Images should be deleted from server
     let post = await Post.findByIdAndRemove(req.params.id);
     res.redirect('/posts');
   }

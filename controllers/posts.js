@@ -23,12 +23,14 @@ module.exports = {
   // POST   create  /posts
   async postCreate(req,res,next) {
     req.body.post.images = [];
-    for (const file of req.files) {
-      let image = await cloudinary.v2.uploader.upload(file.path);
-      req.body.post.images.push({
-        url: image.secure_url,
-        public_id: image.public_id
-      });
+    if (req.files) {
+      for (const file of req.files) {
+        let image = await cloudinary.v2.uploader.upload(file.path);
+        req.body.post.images.push({
+          url: image.secure_url,
+          public_id: image.public_id
+        });
+      }
     }
     let post = await Post.create(req.body.post);
     res.redirect(`/posts/${post.id}`);
@@ -91,8 +93,18 @@ module.exports = {
 
   // DELETE destroy /posts/:id
   async postDelete(req, res, next) {
+    // find the post by idea
+    let post = await Post.findById(req.params.id);
+    // check if there's any images for deletion
+    if (post.images.length > 0) {
+      // loop over images
+      for (const {public_id} of post.images) {
+        // delete images from cloudinary
+        await cloudinary.v2.uploader.destroy(public_id);
+      }
+    }
+    await post.remove();
     // Images should be deleted from server
-    let post = await Post.findByIdAndRemove(req.params.id);
     res.redirect('/posts');
   }
 

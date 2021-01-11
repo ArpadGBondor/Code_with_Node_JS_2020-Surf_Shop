@@ -11,6 +11,7 @@
   <div class="">
     <label for="images">Images:</label>
     <br><input type="file" accept="images/*" name="images" id="imageUpload" value="" multiple>
+    <input type="hidden" name="maxFileSize" id="maxFileSize" value="3145728">
   </div>
   <div class="">
     <% post.images.forEach((image,i) => { %>
@@ -32,18 +33,37 @@
 
 <script type="text/javascript">
 
-  let postEditForm = document.getElementById('postEditForm');
-  postEditForm.addEventListener('submit',function(event){
+  function checkNumberOfImages(event) {
     let imagesAdded = document.getElementById('imageUpload').files.length;
     let imagesNotDeleted = document.querySelectorAll('.imageDeleteCheckbox:not(:checked)').length;
     if (imagesNotDeleted + imagesAdded > 4) {
       event.preventDefault();
       let needsRemoved = imagesNotDeleted + imagesAdded - 4;
       alert(`Maximum number of images: 4\nYou need to remove at least ${needsRemoved} (more) image${ needsRemoved > 1 ? 's' : '' }.`);
-
     }
-  });
+  }
 
+  function checkImageSizes(event) {
+    let msg;
+    let imagesAdded = document.getElementById('imageUpload').files;
+    let maxFileSize = parseInt(document.getElementById('maxFileSize').value);
+    for (var i = 0; i < imagesAdded.length; i++) {
+      const img = imagesAdded[i];
+      if (img.size > maxFileSize) {
+        if (!msg) {
+          msg = `Maximum size of image files: ${maxFileSize} bytes.`;
+        }
+        msg += "\n" + img.name + " is too large."
+      }
+    }
+    if (msg) {
+      event.preventDefault();
+      alert(msg);
+    }
+  }
 
+  let postEditForm = document.getElementById('postEditForm');
+  postEditForm.addEventListener('submit',checkImageSizes);
+  postEditForm.addEventListener('submit',checkNumberOfImages);
 
 </script>

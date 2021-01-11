@@ -75,7 +75,7 @@ module.exports = {
         // upload images
         let image = await cloudinary.v2.uploader.upload(file.path);
         // add images to post.images array
-        req.body.post.images.push({
+        post.images.push({
           url: image.secure_url,
           public_id: image.public_id
         });

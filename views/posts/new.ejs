@@ -1,5 +1,5 @@
 <h1>New post</h1>
-<form class="" action="/posts" method="POST" enctype="multipart/form-data">
+<form class="" id="newEditForm" action="/posts" method="POST" enctype="multipart/form-data">
   <div class="">
     <label for="title">Title:</label>
     <br><input type="text" name="post[title]" id="title" value="" placeholder="Title">
@@ -10,7 +10,8 @@
   </div>
   <div class="">
     <label for="images">Images:</label>
-    <br><input type="file" accept="images/*" name="images" id="images" value="" multiple>
+    <br><input type="file" accept="images/*" name="images" id="imageUpload" value="" multiple>
+    <input type="hidden" name="maxFileSize" id="maxFileSize" value="3145728">
   </div>
   <div class="">
     <label for="description">Description:</label>
@@ -22,3 +23,27 @@
   </div>
   <button type="submit" name="button">Publish post</button>
 </form>
+<script type="text/javascript">
+  function checkImageSizes(event) {
+    let msg;
+    let imagesAdded = document.getElementById('imageUpload').files;
+    let maxFileSize = parseInt(document.getElementById('maxFileSize').value);
+    for (var i = 0; i < imagesAdded.length; i++) {
+      const img = imagesAdded[i];
+      if (img.size > maxFileSize) {
+        if (!msg) {
+          msg = `Maximum size of image files: ${maxFileSize} bytes.`;
+        }
+        msg += "\n" + img.name + " is too large."
+      }
+    }
+    if (msg) {
+      event.preventDefault();
+      alert(msg);
+    }
+  }
+
+  let postEditForm = document.getElementById('newEditForm');
+  postEditForm.addEventListener('submit',checkImageSizes);
+
+</script>
